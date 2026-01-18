@@ -1,4 +1,5 @@
 # PremiumFly
+<<<<<<< HEAD
 
 ![Banner](https://github.com/Takkunlego0916/PremiumFly/blob/main/banner.png)
 
@@ -193,3 +194,6 @@ language: jp
 
 ## 作者
 Created by Takkunlego0916
+=======
+PremiumFly is a Paper/Spigot plugin that adds double-jump flight for selected players in Survival mode, similar to Creative flight but triggered by a double jump.
+>>>>>>> c1ce95c6d54dff55624929e135f82b3734c16674
