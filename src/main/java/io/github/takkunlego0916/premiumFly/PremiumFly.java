@@ -22,7 +22,7 @@ public class PremiumFly extends JavaPlugin implements Listener {
     private final String TAG = "premium";
     private String lang;
 
-    // ★ ダブルジャンプ判定用（「1回目ジャンプ」を記録）
+
     private final HashSet<UUID> jumped = new HashSet<>();
 
     @Override
@@ -33,7 +33,7 @@ public class PremiumFly extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
-        // 1秒ごとに全プレイヤーをチェック（タグに応じて AllowFlight を管理）
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -46,7 +46,7 @@ public class PremiumFly extends JavaPlugin implements Listener {
         getLogger().info("PremiumFly が有効化されました！（ダブルジャンプ対応）");
     }
 
-    // ===== コマンド処理 =====
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -57,7 +57,6 @@ public class PremiumFly extends JavaPlugin implements Listener {
             return true;
         }
 
-        // ===== /pfly reload 対応 =====
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             reloadPlugin();
             sender.sendMessage("§aPremiumFly の設定をリロードしました。");
@@ -99,7 +98,6 @@ public class PremiumFly extends JavaPlugin implements Listener {
     }
 
 
-    // ===== イベント処理 =====
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         updateFly(e.getPlayer());
@@ -111,23 +109,16 @@ public class PremiumFly extends JavaPlugin implements Listener {
         Bukkit.getScheduler().runTaskLater(this, () -> updateFly(e.getPlayer()), 2L);
     }
 
-    // ==============================
-    // ★★★ ここからが“ダブルジャンプ処理” ★★★
-    // ==============================
 
-    // 地面に着いたら「1回目ジャンプ」をリセット
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player p = event.getPlayer();
         UUID id = p.getUniqueId();
 
-        // Premiumタグがない人は無視
         if (!p.getScoreboardTags().contains(TAG)) return;
 
-        // クリエイティブは無視
         if (p.getGameMode() == GameMode.CREATIVE) return;
 
-        // 「前は空中 → 今は地上」になった瞬間だけリセット
         if (!event.getFrom().getBlock().getType().isSolid()
                 && event.getTo().getBlock().getType().isSolid()) {
             jumped.remove(id);
@@ -135,35 +126,29 @@ public class PremiumFly extends JavaPlugin implements Listener {
     }
 
 
-    // ダブルジャンプ判定
     @EventHandler
     public void onToggleFlight(PlayerToggleFlightEvent event) {
         Player p = event.getPlayer();
         UUID id = p.getUniqueId();
 
-        // ===== ここが重要（安全チェック） =====
-        // タグがない OR 飛行が許可されていない → 完全無効化
+
         if (!p.getScoreboardTags().contains(TAG) || !p.getAllowFlight()) {
-            jumped.remove(id);      // ★ リセット！
+            jumped.remove(id);    
             event.setCancelled(true);
             p.setFlying(false);
             return;
         }
 
-        // クリエイティブは通常仕様
         if (p.getGameMode() == GameMode.CREATIVE) return;
 
-        // ★ デフォルトの飛行処理をキャンセル（超重要）
         event.setCancelled(true);
 
         if (!jumped.contains(id)) {
-            // ==== 1回目のジャンプ ====
             jumped.add(id);
-            p.setFlying(false); // まだ飛ばない
+            p.setFlying(false);
         } else {
-            // ==== 2回目のジャンプ ====
             p.setFlying(true);
-            jumped.remove(id); // リセット（連打対策）
+            jumped.remove(id); 
         }
     }
 
@@ -174,18 +159,15 @@ public class PremiumFly extends JavaPlugin implements Listener {
     private void updateFly(Player p) {
         boolean hasTag = p.getScoreboardTags().contains(TAG);
 
-        // クリエイティブは何もしない
         if (p.getGameMode() == GameMode.CREATIVE) return;
 
         if (hasTag) {
             p.setAllowFlight(true);
 
-            // 地上なら“飛行モードは切っておく”
             if (p.isOnGround()) {
                 p.setFlying(false);
             }
         } else {
-            // 完全OFF
             p.setAllowFlight(false);
             p.setFlying(false);
             jumped.remove(p.getUniqueId());
@@ -214,7 +196,6 @@ public class PremiumFly extends JavaPlugin implements Listener {
             }
         }
 
-        // デフォルトは日本語
         switch (key) {
             case "no_perm":
                 return "§c権限がありません。";
@@ -235,10 +216,10 @@ public class PremiumFly extends JavaPlugin implements Listener {
     }
 
     private void reloadPlugin() {
-        reloadConfig();                 // config.yml を再読み込み
-        lang = getConfig().getString("language", "jp"); // 言語を更新
+        reloadConfig();              
+        lang = getConfig().getString("language", "jp"); 
 
-        // オンラインの全プレイヤーの飛行状態を更新
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             updateFly(p);
         }
