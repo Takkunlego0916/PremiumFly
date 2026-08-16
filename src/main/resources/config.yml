@@ -1,8 +1,92 @@
-# PremiumFly 言語設定
-# jp = 日本語
-# en = English
+# PremiumFly configuration
+# language: jp = Japanese, en = English (controls both built-in messages below)
+language: en
 
-# PremiumFly language settings
-# jp = Japanese
-# en = English
-language: jp
+flight:
+  # Flying speed while PremiumFly is active (0.1 - 1.0, vanilla creative default is 0.1)
+  speed: 0.2
+  # How many ticks (20 ticks = 1 second) a player has after a real jump to double-jump into flight
+  jump-window-ticks: 40
+  # World names where PremiumFly is disabled even for eligible players (e.g. minigame arenas)
+  disabled-worlds: []
+
+effects:
+  sound:
+    enabled: true
+    activate: ENTITY_ENDERMAN_TELEPORT
+    deactivate: ENTITY_BAT_TAKEOFF
+  particles:
+    enabled: true
+    activate: CLOUD
+
+hints:
+  jump-hint-enabled: true
+  jump-hint-cooldown-seconds: 3
+
+update-checker:
+  enabled: true
+  # Your project's slug or ID from its Modrinth page URL (modrinth.com/plugin/<this>)
+  modrinth-id: pfly
+
+metrics:
+  # Master switch. Also requires a real plugin-id from https://bstats.org to actually send data.
+  enabled: true
+  plugin-id: 33440
+
+messages:
+  jp:
+    no-permission: "<red>権限がありません。"
+    player-not-found: "<red>プレイヤーが見つかりません。"
+    reload-success: "<green>PremiumFly の設定をリロードしました。"
+    already-enabled: "<yellow><player> にはすでに PremiumFly が付与されています。"
+    already-disabled: "<yellow><player> にはすでに PremiumFly が付与されていません。"
+    enabled-sender: "<green><player> に PremiumFly を付与しました。"
+    enabled-target: "<green>PremiumFly が有効化されました！ジャンプ → 空中で再ジャンプで飛行できます。"
+    disabled-sender: "<red><player> の PremiumFly を解除しました。"
+    disabled-target: "<red>PremiumFly が無効化されました。"
+    flight-start: "<gold>✦ 飛行を開始しました"
+    flight-end: "<gray>着地しました"
+    jump-hint: "<gray>空中でもう一度ジャンプすると飛行できます！"
+    list-header: "<gold>--- PremiumFly 所持プレイヤー (<count>) ---"
+    list-entry: "<white> - <player>"
+    list-empty: "<gray>現在オンラインで PremiumFly を持つプレイヤーはいません。"
+    help: |-
+      <gold><bold>PremiumFly コマンド</bold></gold>
+      <white>/pfly <player> enable</white> <gray>- プレイヤーに付与</gray>
+      <white>/pfly <player> disable</white> <gray>- プレイヤーから解除</gray>
+      <white>/pfly list</white> <gray>- 付与済みプレイヤー一覧</gray>
+      <white>/pfly reload</white> <gray>- 設定をリロード</gray>
+      <white>/pfly info</white> <gray>- プラグイン情報</gray>
+    info-name: "<gold><bold>PremiumFly</bold></gold> <gray>v<version></gray>"
+    info-author: "<gray>作者: <white>Takkunlego0916</white></gray>"
+    info-uptodate: "<green>✔ 最新バージョンです。"
+    info-outdated: "<yellow>⚠ 新しいバージョンがあります: <white><latest></white> (現在 <white><current></white>) - <aqua><url></aqua>"
+    info-update-unknown: "<gray>アップデートを確認できませんでした。"
+  en:
+    no-permission: "<red>You do not have permission."
+    player-not-found: "<red>Player not found."
+    reload-success: "<green>PremiumFly configuration reloaded."
+    already-enabled: "<yellow><player> already has PremiumFly enabled."
+    already-disabled: "<yellow><player> already has PremiumFly disabled."
+    enabled-sender: "<green>Granted PremiumFly to <player>."
+    enabled-target: "<green>PremiumFly enabled! Jump, then jump again mid-air to fly."
+    disabled-sender: "<red>Removed PremiumFly from <player>."
+    disabled-target: "<red>PremiumFly disabled."
+    flight-start: "<gold>✦ You took off"
+    flight-end: "<gray>You landed"
+    jump-hint: "<gray>Jump again while airborne to start flying!"
+    list-header: "<gold>--- Players with PremiumFly (<count>) ---"
+    list-entry: "<white> - <player>"
+    list-empty: "<gray>No online players currently have PremiumFly."
+    help: |-
+      <gold><bold>PremiumFly Commands</bold></gold>
+      <white>/pfly <player> enable</white> <gray>- Grant a player</gray>
+      <white>/pfly <player> disable</white> <gray>- Revoke a player</gray>
+      <white>/pfly list</white> <gray>- List granted players</gray>
+      <white>/pfly reload</white> <gray>- Reload configuration</gray>
+      <white>/pfly info</white> <gray>- Plugin information</gray>
+    info-name: "<gold><bold>PremiumFly</bold></gold> <gray>v<version></gray>"
+    info-author: "<gray>Author: <white>Takkunlego0916</white></gray>"
+    info-uptodate: "<green>✔ You are running the latest version."
+    info-outdated: "<yellow>⚠ A new version is available: <white><latest></white> (current: <white><current></white>) - <aqua><url></aqua>"
+    info-update-unknown: "<gray>Could not check for updates."
