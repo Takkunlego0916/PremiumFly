@@ -4,6 +4,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -60,27 +62,38 @@ public final class FlightManager {
     }
 
     private Sound parseSound(String name, Sound fallback) {
-        if (name == null || name.isBlank()) {
+        NamespacedKey key = toKey(name);
+        Sound resolved = key != null ? Registry.SOUNDS.get(key) : null;
+        if (resolved == null) {
+            if (name != null && !name.isBlank()) {
+                plugin.getLogger().warning("Unknown sound '" + name + "' in config.yml, using the default instead.");
+            }
             return fallback;
         }
-        try {
-            return Sound.valueOf(name.trim().toUpperCase());
-        } catch (IllegalArgumentException exception) {
-            plugin.getLogger().warning("Unknown sound '" + name + "' in config.yml, using the default instead.");
-            return fallback;
-        }
+        return resolved;
     }
 
     private Particle parseParticle(String name, Particle fallback) {
+        NamespacedKey key = toKey(name);
+        Particle resolved = key != null ? Registry.PARTICLE_TYPE.get(key) : null;
+        if (resolved == null) {
+            if (name != null && !name.isBlank()) {
+                plugin.getLogger().warning("Unknown particle '" + name + "' in config.yml, using the default instead.");
+            }
+            return fallback;
+        }
+        return resolved;
+    }
+
+    private NamespacedKey toKey(String name) {
         if (name == null || name.isBlank()) {
-            return fallback;
+            return null;
         }
-        try {
-            return Particle.valueOf(name.trim().toUpperCase());
-        } catch (IllegalArgumentException exception) {
-            plugin.getLogger().warning("Unknown particle '" + name + "' in config.yml, using the default instead.");
-            return fallback;
+        String normalized = name.trim().toLowerCase(Locale.ROOT);
+        if (normalized.contains(":")) {
+            return NamespacedKey.fromString(normalized);
         }
+        return NamespacedKey.minecraft(normalized.replace('_', '.'));
     }
 
     public boolean isExcludedGameMode(Player player) {
